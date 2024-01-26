@@ -313,7 +313,7 @@ app.css.append_css({
 app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
     html.Div([
         html.H1(children='The Credit Canvas', style={'textAlign': 'center', 'color': 'white'}),
-        html.Div(children='we can add a subtitle here', style={'textAlign': 'center', 'color': 'white'}),
+        html.Div(children='Exploring the credit scene like never before!', style={'textAlign': 'center', 'color': 'white'}),
         dbc.Button('RESET', id='reset-button', n_clicks=0, size="lg",
                    color="light", className="me-1",
                    style={'padding': 10, 'fontWeight': 'bold', 'fontSize': 16, 'margin-left': '250px',
