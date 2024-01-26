@@ -15,9 +15,9 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
-df = pd.read_csv('final_credit_0_60.csv', sep=',')
+df = pd.read_csv('jbi100_app/assets/final_credit_0_60.csv', sep=',')
 # read data
-df1 = pd.read_csv('NEW_final_credit_0_60_scaled.csv')
+df1 = pd.read_csv('jbi100_app/assets/NEW_final_credit_0_60_scaled.csv')
 df1.drop(['Unnamed: 0', 'Unnamed: 0.1'], axis=1, inplace=True)
 
 # for theme dashboard, and duplicate outputs
@@ -354,6 +354,12 @@ app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
 #         dcc.Graph(id='radar-chart', figure=create_radar_chart(df1))
 #     ], style={'margin': 'auto', 'display': 'flex', 'justify-content': 'center'})
 # ])
+
+# THIS IS PUCK TRYING HER BEST TO WORK WITH GITHUB
+# HI PUCK PLS TELL ME YOU CAN READ THIS COMMENT. IF YES SAY "success!!!"
+# HIII ITS LII I CAN READ THIS SuUUUCCCEESS
+# HAHA LET'S HOPE WE CAN FIGURE THIS OUT
+who_is_awesome = "Puck haha"
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8058)
