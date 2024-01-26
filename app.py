@@ -34,7 +34,10 @@ high_income_df = df[df['income_bin'] == '250k+']
 valid_emi_df = high_income_df[high_income_df['Total_EMI_per_month'] != 0]
 fig1 = px.bar(income_counts, x=income_counts.values, y=income_counts.index, orientation='h',
               labels={'x': 'Number of Individuals', 'y': 'Income Range'},
-              title='Distribution of Annual Incomes', color_discrete_sequence=['#fb9f3a'])
+              title='<b>Distribution of Annual Incomes</b>', color_discrete_sequence=['#fb9f3a'])
+fig1.update_layout(title_text='<b>Distribution of Annual Incomes</b>', title_x=0.5, height=450, width=675)
+fig1.update_yaxes(title_text="Income Bin")
+
 
 # violin plot of 5 occupations
 high_income_df = df[df['income_bin'] == '250k+'].copy()
@@ -43,8 +46,10 @@ high_income_counts.rename(columns={'index': 'Occupation'}, inplace=True)
 frequent_occupations = high_income_counts.head(5)['Occupation']
 filtered_df = high_income_df[high_income_df['Occupation'].isin(frequent_occupations)]
 fig2 = px.violin(filtered_df, x='Occupation', y='Annual_Income', box=True,
-                 title='Violin Plot of Annual Income by Occupation',
+                 title='<b>Violin Plot of Annual Income by Occupation</b>',
                  color_discrete_sequence=['#fb9f3a'])
+fig2.update_layout(title_text='<b>Violin Plot of Annual Income by Occupation</b>', title_x=0.5, height=450, width=675)
+fig2.update_yaxes(title_text="Annual Income")
 
 
 @app.callback(  # make violin plot interactive
@@ -66,29 +71,20 @@ def update_violin_plot(clickData):
         color_discrete_sequence=['#fb9f3a'])
 
     # make adjustments to how the graph looks
-    fig2_.update_layout(
-        title={
-            'text': 'Violin Plot of Annual Income for Top 5 Occupations',
-            'y': 0.95,  # for position title
-            'x': 0.5,  # title pos
-            'xanchor': 'center',
-            'yanchor': 'top',
-            'font': {'size': 20, 'color': 'black', 'family': 'Arial'}
-        },
+    fig2_.update_layout(title_text='<b>Violin Plot of Annual Income for Top 5 Occupations</b>', title_x=0.5,
         xaxis={
-            'title': {'text': 'Occupation', 'font': {'size': 14, 'color': 'black'}},
-            'tickfont': {'size': 12, 'color': 'black'}
+            'title': {'text': 'Occupation', 'font': {'size': 14, 'color': 'white'}},
+            'tickfont': {'size': 14, 'color': 'white'}
         },
         yaxis={
-            'title': {'text': 'Annual Income', 'font': {'size': 14, 'color': 'black'}},
-            'tickfont': {'size': 12, 'color': 'black'}
+            'title': {'text': 'Annual Income', 'font': {'size': 14, 'color': 'white'}},
+            'tickfont': {'size': 14, 'color': 'white'}
         },
-        height=600,
-        width=800
+        height=450, width=675
     )
+    fig2_.update_yaxes(title_text="Annual Income")
 
     return fig2_
-
 
 @app.callback(  # make the link bidirectional
     Output('bar-chart', 'figure', allow_duplicate=True),
@@ -103,28 +99,20 @@ def update_bar_chart(clickData):
 
     fig1_ = px.bar(income_counts, x=income_counts.values, y=income_counts.index, orientation='h',
                    labels={'x': 'Number of Individuals', 'y': 'Income Range'},
-                   title='Distribution of Annual Incomes', color_discrete_sequence=['#fb9f3a'])
+                   title='<b>Distribution of Annual Incomes</b>', color_discrete_sequence=['#fb9f3a'])
 
-    fig1_.update_layout(
-        title={
-            'text': 'Distribution of Annual Incomes',
-            'y': 0.95,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top',
-            'font': {'size': 20, 'color': 'black', 'family': 'Arial'}
-        },
+    fig1_.update_layout(title_text='<b>Distribution of Annual Incomes</b>', title_x=0.5,
         xaxis={
-            'title': {'text': 'Number of Individuals', 'font': {'size': 14, 'color': 'black'}},
-            'tickfont': {'size': 12, 'color': 'black'}
+            'title': {'text': 'Number of Individuals', 'font': {'size': 16, 'color': 'white'}},
+            'tickfont': {'size': 14, 'color': 'white'}
         },
         yaxis={
-            'title': {'text': 'Income Range', 'font': {'size': 14, 'color': 'black'}},
-            'tickfont': {'size': 12, 'color': 'black'}
+            'title': {'text': 'Income Range', 'font': {'size': 14, 'color': 'white'}},
+            'tickfont': {'size': 14, 'color': 'white'}
         },
-        height=600,
-        width=800
+        height=450, width=675
     )
+    fig1_.update_yaxes(title_text="Income Bin")
 
     return fig1_
 
@@ -134,10 +122,11 @@ income_df = df.copy()
 income_df['Percent_Month_Invest'] = (income_df['Amount_invested_monthly'] / income_df[
     'Monthly_Inhand_Salary']) * 100
 fig3 = px.scatter(income_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-                  title='Scatter Plot: Monthly Income vs. Percentage of Monthly Income Invested',
+                  title='<b>Monthly Income vs. Percentage of Monthly Income Invested</b>',
                   labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
                           'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
-                  color_discrete_sequence=['#46039f'])
+                  color_discrete_sequence=['#fb9f3a'])
+fig3.update_layout(title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested</b>', title_x=0.5, height=450, width=675)
 
 @app.callback(
     Output('scatter-plot', 'figure', allow_duplicate=True),
@@ -163,11 +152,13 @@ def update_scatter_plot(bar_click, violin_click):
             'Monthly_Inhand_Salary']) * 100
         fig3_ = px.scatter(
             income_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-            title=f'Scatter Plot: Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}',
+            title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
             labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
                     'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
-            color_discrete_sequence=['#46039f'])
+            color_discrete_sequence=['#fb9f3a'])
         fig3_.update_traces(opacity=0.5)
+        fig3_.update_layout(title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
+                            title_x=0.5,height=450, width=675)
         return fig3_
 
     # if click comes from violin plot
@@ -178,11 +169,14 @@ def update_scatter_plot(bar_click, violin_click):
             'Monthly_Inhand_Salary']) * 100
         fig3_ = px.scatter(
             profession_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-            title=f'Scatter Plot: Monthly Income vs. Percentage of Monthly Income Invested for {selected_profession}',
+            title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_profession}</b>',
             labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
                     'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
-            color_discrete_sequence=['#46039f'])
+            color_discrete_sequence=['#fb9f3a'])
         fig3_.update_traces(opacity=0.5)
+        fig3_.update_layout(
+            title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
+            title_x=0.5, height=450, width=675)
         return fig3_
 
     # for some reason no click, handle unexpected situation
@@ -237,7 +231,7 @@ def create_radar_chart(df1):
             marker=dict(color=color)
         ))
 
-    fig5.update_layout(
+    fig5.update_layout(title_text='<b>Radar Chart</b>', title_x=0.46,
         polar=dict(
             radialaxis=dict(
                 visible=True,
@@ -245,13 +239,10 @@ def create_radar_chart(df1):
             )
         ),
         showlegend=True,
-        height=600,
-        width=800,
+        height=450, width=675,
         legend=dict(
             title=dict(text='Age Categories')
-        ),
-        title=dict(text='Radar Chart', x=0.5, y=0.95, font=dict(size=20), pad=dict(b=0))
-    )
+        ), )
 
     return fig5
 
@@ -323,9 +314,10 @@ app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
     html.Div([
         html.H1(children='The Credit Canvas', style={'textAlign': 'center', 'color': 'white'}),
         html.Div(children='we can add a subtitle here', style={'textAlign': 'center', 'color': 'white'}),
-        dbc.Button('Reset Dashboard', id='reset-button', n_clicks=0, size="lg",
-                   color="secondary", className="me-1",
-                   style={'padding': 10, 'fontWeight': 'bold', 'fontSize': 16})
+        dbc.Button('RESET', id='reset-button', n_clicks=0, size="lg",
+                   color="light", className="me-1",
+                   style={'padding': 10, 'fontWeight': 'bold', 'fontSize': 16, 'margin-left': '250px',
+                                 'verticalAlign': 'middle'})
     ]),
     html.Div([
         dcc.Graph(id='bar-chart', figure=fig1),
@@ -354,12 +346,6 @@ app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
 #         dcc.Graph(id='radar-chart', figure=create_radar_chart(df1))
 #     ], style={'margin': 'auto', 'display': 'flex', 'justify-content': 'center'})
 # ])
-
-# THIS IS PUCK TRYING HER BEST TO WORK WITH GITHUB
-# HI PUCK PLS TELL ME YOU CAN READ THIS COMMENT. IF YES SAY "success!!!"
-# HIII ITS LII I CAN READ THIS SuUUUCCCEESS
-# HAHA LET'S HOPE WE CAN FIGURE THIS OUT
-who_is_awesome = "Puck haha"
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8058)
