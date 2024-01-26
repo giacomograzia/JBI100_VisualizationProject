@@ -152,12 +152,12 @@ def update_scatter_plot(bar_click, violin_click):
             'Monthly_Inhand_Salary']) * 100
         fig3_ = px.scatter(
             income_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-            title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
+            title='<b>Monthly Income vs. Percentage of Monthly Income Invested for</b>',
             labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
                     'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
             color_discrete_sequence=['#fb9f3a'])
         fig3_.update_traces(opacity=0.5)
-        fig3_.update_layout(title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
+        fig3_.update_layout(title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested</b>',
                             title_x=0.5,height=450, width=675)
         return fig3_
 
@@ -305,11 +305,6 @@ def reset_graphs(n_clicks):
     return fig1, fig2, fig3, create_radar_chart(df1)
 
 
-# theme for the dashboard
-app.css.append_css({
-    'external_url': 'https://cdn.jsdelivr.net/npm/ag-grid-community@27.2.0/styles/ag-theme-alpine.css'
-})
-
 app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
     html.Div([
         html.H1(children='The Credit Canvas', style={'textAlign': 'center', 'color': 'white'}),
@@ -323,29 +318,13 @@ app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
         dcc.Graph(id='bar-chart', figure=fig1),
         dcc.Graph(id='violin-plot', figure=fig2)
     ], style={'margin': 'auto', 'display': 'flex', 'flex': 3, 'justify-content': 'center'}),
+
     html.Div([
         dcc.Graph(id='scatter-plot', figure=fig3),
         dcc.Graph(id='radar-chart', figure=create_radar_chart(df1))
     ], style={'margin': 'auto', 'display': 'flex', 'justify-content': 'center'})
 ])
 
-# app.layout = html.Div(children=[
-#     html.Div([
-#         html.H1(children='The Credit Canvas', style={'textAlign': 'center'}),
-#         html.Div(children='we can add a subtitle here', style={'textAlign': 'center'}),
-#         dbc.Button('Reset Dashboard', id='reset-button', n_clicks=0, size="lg",
-#                    color="secondary", className="me-1",
-#                    style={'padding': 10, 'fontWeight': 'bold', 'fontSize': 16})
-#     ]),
-#     html.Div([
-#         dcc.Graph(id='bar-chart', figure=fig1),
-#         dcc.Graph(id='violin-plot', figure=fig2)
-#     ], style={'margin': 'auto', 'display': 'flex', 'flex': 3, 'justify-content': 'center'}),
-#     html.Div([
-#         dcc.Graph(id='scatter-plot', figure=fig3),
-#         dcc.Graph(id='radar-chart', figure=create_radar_chart(df1))
-#     ], style={'margin': 'auto', 'display': 'flex', 'justify-content': 'center'})
-# ])
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8058)
