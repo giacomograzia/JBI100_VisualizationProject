@@ -298,7 +298,7 @@ def update_scatter_plot(bar_click, violin_click):
             color_discrete_sequence=['#fb9f3a'])
         fig3_.update_traces(opacity=0.5)
         fig3_.update_layout(
-            title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_income_range}</b>',
+            title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested}</b>',
             title_x=0.5, height=450, width=675)
         return fig3_
 
