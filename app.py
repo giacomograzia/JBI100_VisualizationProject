@@ -44,8 +44,17 @@ def main():
     fig_1 = px.bar(income_counts, x=income_counts.values, y=income_counts.index, orientation='h',
                    labels={'x': 'Number of Individuals', 'y': 'Income Range'},
                    title='<b>Distribution of Annual Incomes</b>', color_discrete_sequence=['#fb9f3a'])
-    fig_1.update_layout(title_text='<b>Distribution of Annual Incomes</b>', title_x=0.5, height=450, width=675)
-    fig_1.update_yaxes(title_text="Income Bin")
+    fig_1.update_layout(title_text='<b>Distribution of Annual Incomes</b>', title_x=0.5,
+                        xaxis={
+                            'title': {'text': 'Number of Individuals', 'font': {'size': 16, 'color': 'white'}},
+                            'tickfont': {'size': 14, 'color': 'white'}
+                        },
+                        yaxis={
+                            'title': {'text': 'Income Range', 'font': {'size': 14, 'color': 'white'}},
+                            'tickfont': {'size': 14, 'color': 'white'}
+                        },
+                        height=450, width=675
+                        )
 
     # plot the initial violin plot that uses the whole dataset:
     # violin plot of 5 occupations
@@ -57,8 +66,18 @@ def main():
     fig_2 = px.violin(df_filtered, x='Occupation', y='Annual_Income', box=True,
                       title='<b>Violin Plot of Annual Income by Occupation</b>',
                       color_discrete_sequence=['#fb9f3a'])
-    fig_2.update_layout(title_text='<b>Violin Plot of Annual Income by Occupation</b>', title_x=0.5, height=450,
-                        width=675)
+    # make adjustments to how the graph looks
+    fig_2.update_layout(title_text='<b>Violin Plot of Annual Income for Top 5 Occupations</b>', title_x=0.5,
+                        xaxis={
+                            'title': {'text': 'Occupation', 'font': {'size': 14, 'color': 'white'}},
+                            'tickfont': {'size': 14, 'color': 'white'}
+                        },
+                        yaxis={
+                            'title': {'text': 'Annual Income', 'font': {'size': 14, 'color': 'white'}},
+                            'tickfont': {'size': 14, 'color': 'white'}
+                        },
+                        height=450, width=675
+                        )
     fig_2.update_yaxes(title_text="Annual Income")
 
     # plot the scatter plot based on all the data:
@@ -67,13 +86,16 @@ def main():
     income_df['Percent_Month_Invest'] = (income_df['Amount_invested_monthly'] / income_df[
         'Monthly_Inhand_Salary']) * 100
     # plot the scatter plot
-    fig_3 = px.scatter(income_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-                       title='<b>Monthly Income vs. Percentage of Monthly Income Invested</b>',
-                       labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
-                               'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
-                       color_discrete_sequence=['#fb9f3a'])
-    fig_3.update_layout(title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested</b>', title_x=0.5,
-                        height=450, width=675)
+    fig_3 = px.scatter(
+        income_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
+        title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested</b>',
+        labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
+                'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
+        color_discrete_sequence=['#fb9f3a'])
+    fig_3.update_traces(opacity=0.5)
+    fig_3.update_layout(
+        title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested}</b>',
+        title_x=0.5, height=450, width=675)
 
     return fig_1, fig_2, fig_3
 
@@ -292,7 +314,7 @@ def update_scatter_plot(bar_click, violin_click):
         # plot
         fig3_ = px.scatter(
             profession_df, x='Monthly_Inhand_Salary', y='Percent_Month_Invest',
-            title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested for {selected_profession}</b>',
+            title=f'<b>Monthly Income vs. Percentage of Monthly Income Invested</b>',
             labels={'Monthly_Inhand_Salary': 'Monthly Inhand Salary (USD)',
                     'Percent_Month_Invest': 'Percent of Monthly Income Invested (%)'},
             color_discrete_sequence=['#fb9f3a'])
