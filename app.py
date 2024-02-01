@@ -132,7 +132,7 @@ def create_radar_chart(df_1):
     fig5 = go.Figure()
     for i in range(len(list_radar)):
         # calculate the index by skipping the interval
-        color_index = (i * skip_interval) % len(color_sequence)
+        color_index = 1 + (i * skip_interval) % len(color_sequence)
 
         # select color from sequence
         color = color_sequence[color_index]
