@@ -14,9 +14,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 df = pd.read_csv('jbi100_app/assets/final_credit_0_60.csv', sep=',')
-# read data
-df1 = pd.read_csv('jbi100_app/assets/NEW_final_credit_0_60_scaled.csv')
-df1.drop(['Unnamed: 0', 'Unnamed: 0.1'], axis=1, inplace=True)
+df_scale = df.copy()
 
 # for theme dashboard (font), and to allow duplicate outputs in the callback
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks="initial_duplicate")
@@ -97,30 +95,51 @@ def main():
         title_text='<b>Monthly Income vs. Percentage of Monthly Income Invested}</b>',
         title_x=0.5, height=450, width=675)
 
-    return fig_1, fig_2, fig_3
+    # create a scaled dataframe for the radar chart
+    age_bins = [0, 20, 30, 40, 50, float('inf')]
+    age_labels = ['0-19', '20-29', '30-39', '40-49', '50+']
+    # add the age category to each row
+    df_scale['age_category'] = pd.cut(df_scale['Age'], bins=age_bins, labels=age_labels, right=False)
+    df_scale['age_category'] = df_scale['age_category'].astype(str)
+    # group by the age category
+    df_group = df_scale.groupby('age_category').median(numeric_only=True).copy()
+    # adjusted monthly salary for irregular jobs
+    df_group['Avg_Monthly_Salary'] = df_group.Annual_Income / 12
+    df_group = df_group.reset_index()
+    # scale the following columns from the data frame
+    columns_to_scale = ['Monthly_Inhand_Salary', 'Total_EMI_per_month', 'Annual_Income', 'Amount_invested_monthly',
+                        'Avg_Monthly_Salary']
+    scaler = MinMaxScaler(feature_range=(1, 5))
+
+    # create dataframe to use as input for function
+    scaled_values = scaler.fit_transform(df_group[columns_to_scale])
+    scaled_df = pd.DataFrame(scaled_values, columns=[f'SC_{col}' for col in columns_to_scale])
+    result_df = pd.concat([df_group, scaled_df], axis=1)
+
+    return fig_1, fig_2, fig_3, result_df
 
 
-# call main to make sure that initial graphs are displayed and that figures can be accessed inside other functions
-fig1, fig2, fig3 = main()
+# call main to make sure that initial graphs are displayed and that figures/df can be accessed inside other functions
+fig1, fig2, fig3, scale_df = main()
 
 
-def create_radar_chart(df_1):
+def create_radar_chart(df_scale_vals):
     """
     Function that creates the initial radar chart containing all data
 
-    :param df_1: dataframe with scaled entries for radar chart
+    :param df_scale_vals: dataframe with scaled entries for radar chart
     :return: radar chart showing multiple attributes per age category
     """
     # prepare data, column names, axis names
     radar_cols = ['SC_Monthly_Inhand_Salary', 'SC_Total_EMI_per_month', 'SC_Avg_Monthly_Salary',
                   'SC_Amount_invested_monthly']
-    data_radar = df_1[radar_cols].copy()
+    data_radar = df_scale_vals[radar_cols].copy()
     list_radar = data_radar.values.tolist()
     hover_cols = ['Monthly_Inhand_Salary', 'Total_EMI_per_month', 'Avg_Monthly_Salary', 'Amount_invested_monthly']
-    data_hover = df_1[hover_cols].copy()
+    data_hover = df_scale_vals[hover_cols].copy()
     list_hover = data_hover.values.tolist()
     labels = ['Monthly Inhand Salary', 'Total EMI per Month', 'Adjusted Monthly Salary', 'Amount Invested Monthly']
-    age_labels = df_1['age_category'].unique()
+    age_labels = df_scale_vals['age_category'].unique()
 
     # get colors, reverse them so dark colors will be at the back of the plot
     color_sequence = px.colors.sequential.Plasma_r[::-1]
@@ -343,11 +362,11 @@ def update_radar_chart(selected_data, n_clicks):
 
     # if nothing is triggered return original chart
     if not ctx.triggered_id and n_clicks > 0:
-        return create_radar_chart(df1)
+        return create_radar_chart(scale_df)
 
     # avoids issue with button
     if selected_data is None:
-        return create_radar_chart(df1)
+        return create_radar_chart(scale_df)
 
     # prepare data by creating an adjusted monthly income more appropriate for jobs with an irregular income
     points = selected_data['points']
@@ -357,7 +376,7 @@ def update_radar_chart(selected_data, n_clicks):
 
     # to avoid the dashboard not working, return the original figure if the df is empty
     if radar_df.empty:
-        return create_radar_chart(df1)
+        return create_radar_chart(scale_df)
 
     # prepare data by scaling
     age_bins = [0, 20, 30, 40, 50, float('inf')]
@@ -372,7 +391,7 @@ def update_radar_chart(selected_data, n_clicks):
 
     # also to avoid errors
     if df_group.empty:
-        return create_radar_chart(df1)
+        return create_radar_chart(scale_df)
 
     # create dataframe to use as input for function
     scaled_values = scaler.fit_transform(df_group[columns_to_scale])
@@ -397,10 +416,10 @@ def reset_graphs(n_clicks):
     """
     # if the button is not clicked, or it's the first time, return the initial figures
     if n_clicks is None or n_clicks == 0:
-        return fig1, fig2, fig3, create_radar_chart(df1)
+        return fig1, fig2, fig3, create_radar_chart(scale_df)
 
     # button is clicked, return the initial figures (aka reset)
-    return fig1, fig2, fig3, create_radar_chart(df1)
+    return fig1, fig2, fig3, create_radar_chart(scale_df)
 
 
 # layout for the dashboard
@@ -424,7 +443,7 @@ app.layout = html.Div(style={'backgroundColor': '#111111'}, children=[
 
     html.Div([
         dcc.Graph(id='scatter-plot', figure=fig3),
-        dcc.Graph(id='radar-chart', figure=create_radar_chart(df1))
+        dcc.Graph(id='radar-chart', figure=create_radar_chart(scale_df))
     ], style={'margin': 'auto', 'display': 'flex', 'justify-content': 'center'})
 ])
 
