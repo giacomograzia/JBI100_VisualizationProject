@@ -210,7 +210,7 @@ def get_data():
     final_df_0_60 = final_df[final_df['Age'] < 60]
 
     # uncomment if you want to get the csv as well
-    # final_df_0_60.to_csv('final_credit_0_60.csv')
+    # final_df_0_60.to_csv('jbi100_app/assets/final_credit_0_60.csv')
 
     return final_df_0_60
 

@@ -25,11 +25,11 @@ Please install all required packages by running:
 > pip install -r requirements.txt
 ```
 
-Let's start off by taking a look at the file that cleans and preprocesses all the data. DO to the directory and find the data.py file.
+Let's start off by taking a look at the file that cleans and preprocesses all the data. Go to the directory and find the data.py file.
 There is one big function inside this file, which loads the all_data.csv (which is the orignal dataset from Kaggle) and applies cleaning and preprocessing to it.
 If you scroll to the bottom, you can see that, just before the return function, the final_credit_0_60 dataframe is created. 
 If you uncomment the line that makes this dataframe into a csv, you can save it locally onto your computer. 
-To make it easy for you, we have already included this file here in this virtual environment. We have also done this with the Kaggle dataset. 
+To make it easy for you, we have already included this file here in this repository. We have also done this with the Kaggle dataset. 
 
 Now onto the most important part: the dashboard! The code for the dashboard is inside the app.py file, when you run the file, a link shows up.
 Open this in your browser to see the results. You can edit the code in any editor (e.g. Visual Studio Code) and if you save it you will see the results in the browser.
