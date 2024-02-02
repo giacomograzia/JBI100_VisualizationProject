@@ -1,8 +1,3 @@
-# IS THIS NEEDED????
-# from jbi100_app.main import app
-# from jbi100_app.views.menu import make_menu_layout
-# from jbi100_app.views.scatterplot import Scatterplot
-
 import pandas as pd
 import dash
 from dash.dependencies import Input, Output
@@ -151,7 +146,7 @@ def create_radar_chart(df_scale_vals):
     fig5 = go.Figure()
     for i in range(len(list_radar)):
         # calculate the index by skipping the interval
-        color_index = 1 + (i * skip_interval) % len(color_sequence)
+        color_index = (i * skip_interval) % len(color_sequence)
 
         # select color from sequence
         color = color_sequence[color_index]
